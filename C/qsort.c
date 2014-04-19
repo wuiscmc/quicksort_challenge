@@ -2,22 +2,17 @@
 #include <stdlib.h>
 #include "qsort.h"
 
-int* merge(int* array1, int array1_length, int* array2, int array2_length) {
-
-  int* array_merged = (int*) malloc(sizeof(int) * (array1_length + array2_length));
-
+void copy_array_elements(int* input, int* output, int length) {
   int i;
-  for(i = 0; i < array1_length; i++) {
-    array_merged[i] = array1[i];
+  for(i = 0; i < length; i++) {
+    output[i] = input[i];
   }
+}
 
-  int j = i;
-  for(i = 0; i < array2_length; i++) {
-    array_merged[j] = array2[i];
-    j++;
-  }
-
-  return array_merged;
+int* copy_array(int* array, int length) {
+  int* array_copy = (int*) malloc(length * sizeof(int));
+  copy_array_elements(array, array_copy, length);
+  return array_copy;
 }
 
 int select_pivot(int* array, int length) {
@@ -25,17 +20,19 @@ int select_pivot(int* array, int length) {
   return array[i];
 }
 
+int* merge(int* array1, int array1_length, int* array2, int array2_length) {
 
-int* copy_array(int* array, int length) {
-  int* array_copy = (int*) malloc(length * sizeof(int));
-  int i;
-  for(i = 0; i < length; i++) {
-    array_copy[i] = array[i];
+  if(array1 == NULL && array2 == NULL) {
+    return NULL;
   }
-  return array_copy;
+
+  int* array_merged = (int*) malloc(sizeof(int) * (array1_length + array2_length));
+
+  copy_array_elements(array1, array_merged, array1_length);
+  copy_array_elements(array2, (array_merged + array1_length), array2_length);
+
+  return array_merged;
 }
-
-
 
 int* quicksort(int* array, int length) {
 

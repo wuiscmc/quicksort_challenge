@@ -74,10 +74,16 @@ int compare_arrays(int *array1, int *array2, int length) {
 }
 
 
-static void test_select_pivot(){
-  int array[2] = {5,4};
+static void test_select_pivot_long_array(){
+  int array[10] = {6,5,1,9,4,7,5,12,8,4};
+  int pivot = select_pivot(array, 10);
+  assert(contains_element(pivot, array, 10));
+}
+
+static void test_select_pivot_short_array(){
+  int array[2] = {6,5};
   int pivot = select_pivot(array, 2);
-  assert(pivot == 5 || pivot == 4);
+  assert(contains_element(pivot, array, 2));
 }
 
 static void test_merge_arrays(){
@@ -85,7 +91,8 @@ static void test_merge_arrays(){
   int array2[3] = {1,2,3}; int array2_length = 3;
   int* array_merged = merge(array1, array1_length, array2, array2_length);
 
-  assert(compare_arrays(array1, array_merged, array1_length) && compare_arrays(array2, (array_merged + array1_length), array2_length));
+  assert(compare_arrays(array1, array_merged, array1_length));
+  assert(compare_arrays(array2, (array_merged + array1_length), array2_length));
   free(array_merged);
 }
 
@@ -97,6 +104,11 @@ static void test_merge_arrays_one_empty(){
   assert(array_merged != array1);
   assert(compare_arrays(array1, array_merged, array1_length));
   free(array_merged);
+}
+
+static void test_merge_arrays_two_empty(){
+  int* array_merged = merge(NULL, 0, NULL, 0);
+  assert(array_merged == NULL);
 }
 
 static void test_copy_array(){
@@ -114,7 +126,7 @@ static void test_quicksort(){
   int array[4] = {2,9,1,5};
   int expected_sorted_array[4] = {1,2,5,9};
   int *array_sorted = quicksort(array, 4);
-  
+
   assert(compare_arrays(array_sorted, expected_sorted_array, 4));
 }
 
@@ -147,9 +159,11 @@ static void test_quicksort_2(){
 
 int main(){
 
-  test_select_pivot();
+  test_select_pivot_long_array();
+  test_select_pivot_short_array();
   test_merge_arrays();
   test_merge_arrays_one_empty();
+  test_merge_arrays_two_empty();
   test_copy_array();
   test_quicksort();
   test_quicksort_2();

@@ -60,7 +60,17 @@ int remove_element(int element, int **array, int length) {
   else {
     return 0;
   }
+}
 
+int compare_arrays(int *array1, int *array2, int length) {
+  int i = 0;
+  int equals = 1;
+  for(; i < length; i++){
+    if (array1[i] != array2[i]){
+      equals = 0;
+    }
+  }
+  return equals;
 }
 
 
@@ -74,75 +84,29 @@ static void test_merge_arrays(){
   int array1[2] = {5,4}; int array1_length = 2;
   int array2[3] = {1,2,3}; int array2_length = 3;
   int* array_merged = merge(array1, array1_length, array2, array2_length);
-  int equals = 0x1;
 
-  int i = 0;
-  for(i = 0; i < array1_length; i++){
-    if (array_merged[i] != array1[i]){
-      equals = 0x0;
-    }
-  }
-
-  int j = i;
-  for(i = 0; i < array2_length; i++){
-    if (array_merged[j] != array2[i]){
-      equals = 0x0;
-    }
-    j++;
-  }
-
-  int array_merged_length = j;
+  assert(compare_arrays(array1, array_merged, array1_length) && compare_arrays(array2, (array_merged + array1_length), array2_length));
   free(array_merged);
-
-  assert(equals == 0x1);
-  assert(array_merged_length == (array1_length + array2_length));
 }
 
 static void test_merge_arrays_one_empty(){
   int array1[2] = {5,4};
   int array1_length = 2;
   int* array_merged = merge(array1, array1_length, NULL, 0);
-  int equals = 0x1;
-  int i = 0;
-
-  while(i < array1_length && equals == 0x1){
-    if (array_merged[i] != array1[i]) {
-      equals = 0x0;
-    }
-    i++;
-  }
-
-  int array_merged_length = i;
 
   assert(array_merged != array1);
+  assert(compare_arrays(array1, array_merged, array1_length));
   free(array_merged);
-
-  assert(equals == 0x1);
-  assert(array_merged_length == array1_length);
 }
 
 static void test_copy_array(){
-
   int array[3] = {1,2,3};
   int array_length = 3;
   int* array_copy = copy_array(array, array_length);
-  int equals = 0x1;
-  int i = 0;
-
-  while(i < array_length && equals == 0x1){
-    if (array_copy[i] != array[i]) {
-      equals = 0x0;
-    }
-    i++;
-  }
-
-  int array_copy_length = i;
 
   assert(array_copy != array);
+  assert(compare_arrays(array, array_copy, array_length));
   free(array_copy);
-
-  assert(equals == 0x1);
-  assert(array_copy_length == array_length);
 }
 
 
@@ -150,16 +114,8 @@ static void test_quicksort(){
   int array[4] = {2,9,1,5};
   int expected_sorted_array[4] = {1,2,5,9};
   int *array_sorted = quicksort(array, 4);
-  int i = 0;
-  int equals = 0x0;
-  for(; i < 4; i ++){
-    if (expected_sorted_array[i] != array_sorted[i])
-    {
-      equals = 0x1;
-    }
-  }
-
-  assert(equals == 0x0);
+  
+  assert(compare_arrays(array_sorted, expected_sorted_array, 4));
 }
 
 /*
